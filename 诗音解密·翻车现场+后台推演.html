@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>诗音解密 · 翻车现场 + 后台推演</title>
+<style>
+/* ============ 合并框架 ============ */
+html,body{height:100%;margin:0}
+body{position:relative;background:#DED7C6;overflow:hidden;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+
+.wbnav{
+  position:relative;z-index:99;height:clamp(34px,5.2vh,46px);
+  display:flex;align-items:center;gap:1vw;padding:0 1.2vw;
+  background:linear-gradient(180deg,#2E2B26,#221F1B);
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.wbnav .wb-brand{
+  font-family:"KaiTi","STKaiti","楷体",serif;color:#F0EAD4;
+  font-size:clamp(12px,2.2vh,18px);letter-spacing:.16em;white-space:nowrap;
+}
+.wbnav .wb-tabs{display:flex;gap:.4vw;margin-left:auto}
+.wbtab{
+  font-family:"KaiTi","STKaiti","楷体",serif;
+  font-size:clamp(11px,1.9vh,16px);letter-spacing:.12em;
+  padding:.35em 1.1em;cursor:pointer;white-space:nowrap;
+  color:#B9B2A2;background:transparent;
+  border:1px solid rgba(255,255,255,.18);border-radius:3px;
+  transition:all .22s;
+}
+.wbtab:hover{color:#F0EAD4;border-color:rgba(255,255,255,.4)}
+.wbtab.on{
+  color:#2E2B26;background:#E4DCC2;border-color:#E4DCC2;
+  box-shadow:0 0 0 1px rgba(192,138,30,.6),0 0 12px rgba(192,138,30,.35);
+}
+.wbnav .wb-tip{
+  font-size:clamp(9px,1.3vh,12px);color:rgba(240,234,212,.42);
+  letter-spacing:.08em;white-space:nowrap;
+}
+@media (max-width:720px){ .wbnav .wb-tip{display:none} }
+
+.scene{position:absolute;left:0;right:0;top:clamp(34px,5.2vh,46px);bottom:0;overflow:hidden}
+#sceneA{display:flex;align-items:center;justify-content:center}
+
+/* ============ 场景一：翻车现场（ff- 命名空间） ============ */
+
+:root{
+  --ff-paper:#F5F1E8;        /* 宣纸米白 */
+  --ff-ink:#1F4E4A;          /* 墨青 */
+  --ff-ink-soft:#4E7C77;
+  --ff-ink-fade:#9FB6B3;
+  --ff-cinnabar:#B03A2E;     /* 朱砂 */
+  --ff-rattan:#D4A017;       /* 藤黄 */
+  --ff-line:#DCD3BE;
+  --ff-kai:"KaiTi","STKaiti","楷体","Songti SC",serif;
+  --ff-hei:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+}
+/* 原 body 规则改为只作用于场景一，避免与场景二的 body 规则互相覆盖 */
+#sceneA{
+  background:#E7E1D2;
+  font-family:var(--ff-hei);
+  color:var(--ff-ink);
+  overflow:hidden;
+  user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;
+}
+
+/* ============ 设备屏 ============ */
+.ff-app{
+  position:relative;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  background-color:var(--ff-paper);
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.85), transparent 55%),
+    radial-gradient(circle at 82% 78%, rgba(180,160,120,.18), transparent 58%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.09'/></svg>");
+  overflow:hidden;
+}
+@media (min-width:900px){
+  .ff-app{
+    width:820px;height:520px;
+    border:10px solid #33322f;border-radius:26px;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+}
+
+/* ============ 顶部状态栏 ============ */
+.ff-header{
+  flex:0 0 auto;
+  height:clamp(30px,9vh,46px);
+  padding:0 clamp(12px,3vw,22px);
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--ff-line);
+  font-size:clamp(11px,2.6vh,15px);
+  letter-spacing:1px;
+}
+.ff-brand{font-family:var(--ff-kai);font-size:clamp(14px,3.4vh,20px);font-weight:bold;letter-spacing:2px;}
+.ff-brand em{font-style:normal;font-size:.7em;opacity:.6;margin-left:4px;font-family:var(--ff-hei);letter-spacing:0;}
+.ff-status{display:flex;align-items:center;gap:6px;color:var(--ff-ink-soft);}
+.ff-dot{
+  width:8px;height:8px;border-radius:50%;background:#2E9E6B;
+  box-shadow:0 0 6px #2E9E6B,0 0 12px rgba(46,158,107,.6);
+  animation:ff-breathe 2s ease-in-out infinite;
+}
+.ff-dot.ff-bad{background:var(--ff-cinnabar);box-shadow:0 0 6px var(--ff-cinnabar),0 0 14px rgba(176,58,46,.7);animation:none;}
+@keyframes ff-breathe{0%,100%{opacity:1;}50%{opacity:.45;}}
+
+/* ============ 诗词区 ============ */
+.ff-poem{
+  flex:0 0 auto;
+  padding:clamp(6px,2vh,16px) 16px clamp(2px,1vh,8px);
+  text-align:center;
+}
+.ff-poem .ff-src{font-family:var(--ff-kai);font-size:clamp(10px,2.2vh,13px);color:var(--ff-ink-fade);letter-spacing:2px;}
+.ff-poem .ff-line{
+  font-family:var(--ff-kai);
+  font-size:clamp(18px,5.6vh,30px);
+  letter-spacing:clamp(2px,1vw,6px);
+  margin-top:clamp(2px,1vh,6px);
+  color:var(--ff-ink);
+}
+.ff-poem .ff-line u{
+  text-decoration:none;
+  border-bottom:1px dashed var(--ff-ink-soft);
+  padding-bottom:2px;
+}
+
+/* ============ 波形区 ============ */
+.ff-wave{
+  flex:1 1 auto;
+  min-height:0;
+  margin:0 clamp(10px,3vw,26px);
+  position:relative;
+}
+.ff-wave canvas{width:100%;height:100%;display:block;}
+.ff-wave .ff-axis{
+  position:absolute;left:0;right:0;top:50%;height:1px;
+  background:repeating-linear-gradient(90deg,var(--ff-line) 0 6px,transparent 6px 12px);
+  opacity:.7;
+}
+.ff-wave.ff-hide{opacity:0;transition:opacity .25s;}
+
+/* ============ 麦克风区 ============ */
+.ff-mic-zone{
+  flex:0 0 auto;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(2px,1vh,10px) 0;
+}
+.ff-mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.ff-mic{
+  width:clamp(52px,15vh,86px);height:clamp(52px,15vh,86px);
+  position:relative;z-index:2;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;
+}
+.ff-mic svg{width:100%;height:100%;display:block;}
+.ff-mic path,.ff-mic line{stroke:var(--ff-ink);}
+.ff-mic .ff-halo{
+  position:absolute;left:50%;top:50%;
+  width:150%;height:150%;margin:-75% 0 0 -75%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(31,78,74,.22),transparent 68%);
+  z-index:1;
+  animation:ff-halo 3.2s ease-in-out infinite;
+}
+@keyframes ff-halo{0%,100%{transform:scale(.82);opacity:.35;}50%{transform:scale(1.12);opacity:.85;}}
+
+.ff-app[data-state="rec"] .ff-mic{transform:scale(1.12);}
+.ff-app[data-state="rec"] .ff-mic path,.ff-app[data-state="rec"] .ff-mic line{stroke:#17544F;}
+.ff-app[data-state="rec"] .ff-halo{animation:ff-haloFast 1s ease-in-out infinite;}
+@keyframes ff-haloFast{0%,100%{transform:scale(1);opacity:.5;}50%{transform:scale(1.35);opacity:1;}}
+
+.ff-app[data-state="proc"] .ff-mic{transform:scale(.72);opacity:.35;}
+.ff-app[data-state="err"] .ff-mic{transform:scale(.72);opacity:.18;}
+
+.ff-hint{
+  margin-top:clamp(2px,1.2vh,10px);
+  font-family:var(--ff-kai);
+  font-size:clamp(12px,3vh,17px);
+  letter-spacing:2px;color:var(--ff-ink-soft);
+  min-height:1.4em;transition:color .3s;
+}
+.ff-timer{
+  font-family:var(--ff-hei);
+  font-size:clamp(10px,2.4vh,14px);
+  color:var(--ff-ink-fade);letter-spacing:1px;
+  margin-top:2px;min-height:1.2em;
+  font-variant-numeric:tabular-nums;
+}
+.ff-timer.ff-on{color:var(--ff-cinnabar);}
+
+/* ============ 底部控制 ============ */
+.ff-footer{
+  flex:0 0 auto;
+  padding:clamp(4px,1.6vh,16px) 16px clamp(10px,3vh,20px);
+  display:flex;flex-direction:column;align-items:center;gap:clamp(4px,1.4vh,10px);
+}
+.ff-progress{
+  width:min(70%,320px);height:2px;background:var(--ff-line);border-radius:2px;overflow:hidden;
+  opacity:0;transition:opacity .3s;
+}
+.ff-progress.ff-on{opacity:1;}
+.ff-progress i{display:block;height:100%;width:0;background:var(--ff-ink);transition:width .12s linear;}
+.ff-wood{
+  font-family:var(--ff-kai);
+  font-size:clamp(14px,3.6vh,20px);
+  letter-spacing:4px;
+  color:#F7F1E3;
+  padding:clamp(7px,2vh,12px) clamp(26px,9vw,52px);
+  border:1px solid #4a2a16;border-radius:6px;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.06) 2px 6px),
+    linear-gradient(180deg,#8a5a34,#5e3620);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 3px 0 #4a2a16,0 6px 14px rgba(0,0,0,.22);
+  cursor:pointer;transition:transform .08s,box-shadow .08s,filter .3s;
+}
+.ff-wood:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 #4a2a16;}
+.ff-wood.ff-rec{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.06) 2px 6px),linear-gradient(180deg,#8E3A2E,#6A2318);border-color:#4a1a12;}
+.ff-wood:disabled{filter:grayscale(.7) brightness(.85);cursor:default;}
+
+/* ============ 太极加载环 ============ */
+.ff-loader{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(.6);
+  width:clamp(58px,16vh,92px);height:clamp(58px,16vh,92px);
+  opacity:0;pointer-events:none;z-index:5;
+  transition:opacity .25s,transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.ff-loader.ff-on{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.ff-loader .ff-ring{position:absolute;inset:0;animation:ff-spin 2.4s linear infinite;}
+.ff-loader .ff-taiji{position:absolute;inset:14%;animation:ff-spin 1.6s cubic-bezier(.6,.05,.4,.95) infinite;}
+@keyframes ff-spin{to{transform:rotate(360deg);}}
+.ff-loader.ff-broken{animation:ff-shatterOut .5s forwards;}
+@keyframes ff-shatterOut{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:1;}
+  35%{transform:translate(-50%,-50%) scale(1.3) rotate(12deg);opacity:.9;}
+  100%{transform:translate(-50%,-50%) scale(.2) rotate(40deg);opacity:0;}
+}
+.ff-frag{position:absolute;left:50%;top:50%;width:8px;height:3px;background:var(--ff-ink);border-radius:2px;opacity:0;}
+.ff-frag.ff-go{animation:ff-fly .6s ease-out forwards;}
+@keyframes ff-fly{
+  0%{opacity:.9;transform:translate(-50%,-50%) rotate(0) translate(0,0);}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--rot)) translate(var(--tx),var(--ty));}
+}
+
+/* ============ 边缘红光 ============ */
+.ff-edge{
+  position:absolute;inset:0;pointer-events:none;z-index:8;opacity:0;
+  box-shadow:inset 0 0 clamp(30px,9vw,70px) rgba(176,58,46,.85);
+}
+.ff-edge.ff-on{animation:ff-edgeFlash 1.1s ease-out 2;}
+@keyframes ff-edgeFlash{0%{opacity:0;}18%{opacity:1;}45%{opacity:.25;}70%{opacity:.9;}100%{opacity:0;}}
+
+/* ============ 报错弹窗 ============ */
+.ff-mask{
+  position:absolute;inset:0;z-index:20;
+  background:rgba(31,38,36,.42);
+  display:flex;align-items:center;justify-content:center;
+  padding:12px;
+  opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;
+}
+.ff-mask.ff-on{opacity:1;visibility:visible;}
+.ff-card{
+  width:min(92%,520px);
+  background:var(--ff-paper);
+  border:2px solid var(--ff-cinnabar);
+  border-radius:10px;
+  padding:clamp(10px,3vh,22px) clamp(14px,4vw,28px);
+  text-align:center;
+  box-shadow:0 16px 46px rgba(0,0,0,.4);
+  transform:scale(.86) translateY(14px);opacity:0;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+}
+.ff-mask.ff-on .ff-card{transform:scale(1) translateY(0);opacity:1;}
+.ff-card .ff-tag{
+  display:inline-block;font-family:var(--ff-kai);font-weight:bold;
+  color:#fff;background:var(--ff-cinnabar);
+  font-size:clamp(12px,2.8vh,16px);letter-spacing:2px;
+  padding:2px 12px;border-radius:3px;
+}
+.ff-card .ff-lead{font-family:var(--ff-kai);font-size:clamp(13px,3.2vh,18px);color:var(--ff-ink-soft);margin:clamp(6px,1.6vh,12px) 0 2px;letter-spacing:2px;}
+.ff-card .ff-word{
+  font-family:var(--ff-kai);font-weight:bold;
+  font-size:clamp(22px,6.6vh,38px);
+  color:var(--ff-cinnabar);letter-spacing:clamp(3px,1.4vw,8px);
+  margin:2px 0;
+}
+.ff-card .ff-word span{text-decoration:underline;text-decoration-style:wavy;text-underline-offset:5px;}
+.ff-card .ff-again{font-family:var(--ff-kai);font-size:clamp(14px,3.4vh,20px);color:var(--ff-ink);letter-spacing:4px;margin-top:clamp(4px,1.2vh,10px);}
+.ff-card .ff-meta{
+  font-size:clamp(9px,2vh,11px);color:var(--ff-ink-fade);margin-top:clamp(6px,1.6vh,12px);
+  border-top:1px dashed var(--ff-line);padding-top:clamp(4px,1.2vh,9px);line-height:1.7;
+}
+.ff-card .ff-acts{display:flex;gap:10px;justify-content:center;margin-top:clamp(6px,1.8vh,14px);flex-wrap:wrap;}
+.ff-mini{
+  font-family:var(--ff-kai);font-size:clamp(11px,2.6vh,15px);letter-spacing:2px;
+  padding:6px 16px;border-radius:5px;cursor:pointer;
+  border:1px solid var(--ff-ink);background:transparent;color:var(--ff-ink);
+}
+.ff-mini:hover{background:rgba(31,78,74,.08);}
+.ff-mini.ff-ghost{border-color:var(--ff-line);color:var(--ff-ink-soft);text-decoration:none;display:inline-block;}
+
+/* ============ 隐藏热区（右下角三连点） ============ */
+.ff-hot{
+  position:absolute;right:0;bottom:0;width:78px;height:78px;z-index:15;
+  background:transparent;
+}
+
+/* ============ 场景二：后台推演 ============ */
+
+:root{
+  --paper:#F6F3E5;           /* 宣纸略转暖，田园感 */
+  --paper-2:#F0EAD4;
+  --lotus:#4E7A52;           /* 荷叶青：田园点缀 */
+  --parch:#F6EEDC;          /* 羊皮纸（古卷控制台） */
+  --parch-2:#EFE3C9;
+  --ink:#2E2B26;
+  --ink-soft:rgba(46,43,38,.62);
+  --ink-faint:rgba(46,43,38,.30);
+  --ink-ghost:rgba(46,43,38,.14);
+  --qing:#1F4E4A;           /* 墨青：处理中 */
+  --zhu:#B03A2E;            /* 朱砂：错误 */
+  --teng:#C08A1E;           /* 藤黄：候选/罕见 */
+  --green:#4A7A52;          /* 竹绿：正常 */
+  --jade:#FBF8F0;
+  --font-title:"KaiTi","STKaiti","Kaiti SC","楷体","Songti SC","SimSun",serif;
+  --font-body:"Songti SC","SimSun","Noto Serif CJK SC","Source Han Serif SC","STSong",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none !important}
+html,body{height:100%}
+body{
+  background:#DED7C6;font-family:var(--font-body);color:var(--ink);
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+.vtext{writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.16em}
+
+/* ============ 页面框架 ============ */
+.page{
+  position:relative;width:100%;height:100%;
+  background:radial-gradient(125% 95% at 50% 6%, #FBF8F0 0%, var(--paper) 44%, var(--paper-2) 100%);
+  display:flex;flex-direction:column;
+  padding:2.2vh 2.6vw 2.4vh;
+  overflow:hidden;
+}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.075;mix-blend-mode:multiply}
+.mountains{position:absolute;left:0;right:0;bottom:0;width:100%;height:20vh;pointer-events:none;z-index:0}
+
+/* 顶栏 */
+.topbar{
+  position:relative;z-index:2;
+  display:flex;align-items:center;gap:1.4vw;
+  padding-bottom:1.4vh;border-bottom:1px solid var(--ink-ghost);
+}
+.topbar h1{
+  font-family:var(--font-title);
+  font-size:clamp(22px,3.2vh,40px);
+  letter-spacing:.22em;font-weight:400;
+}
+.seal-zhu{
+  width:clamp(28px,3.6vh,44px);height:clamp(28px,3.6vh,44px);
+  border:2px solid var(--zhu);border-radius:3px;color:var(--zhu);
+  font-family:var(--font-title);display:flex;align-items:center;justify-content:center;
+  font-size:clamp(9px,1.2vh,15px);line-height:1.05;text-align:center;padding:2px;
+  transform:rotate(-3deg);opacity:.92;box-shadow:inset 0 0 0 1px rgba(176,58,46,.22);
+}
+.topbar .sub{
+  font-size:clamp(11px,1.4vh,17px);color:var(--ink-faint);letter-spacing:.16em;
+}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:1vw}
+.ghost{
+  background:none;border:1px solid var(--ink-ghost);border-radius:4px;cursor:pointer;
+  font-family:var(--font-title);color:var(--ink-soft);
+  font-size:clamp(11px,1.4vh,16px);letter-spacing:.18em;
+  padding:.35em .9em;transition:.2s;
+}
+.ghost:hover{border-color:var(--ink-faint);color:var(--ink)}
+
+/* 主体：左图右卷 */
+.body{
+  position:relative;z-index:2;flex:1;min-height:0;
+  display:grid;grid-template-columns:50% 50%;gap:0 1.6vw;
+  padding-top:1.6vh;
+}
+
+/* ============ 左：系统经脉图 ============ */
+.map{
+  position:relative;min-width:0;
+  display:flex;flex-direction:column;
+}
+.map .cap{
+  font-size:clamp(10px,1.3vh,15px);color:var(--ink-faint);letter-spacing:.12em;
+  text-align:center;margin-top:.5vh;flex:0 0 auto;
+}
+.map svg{width:100%;flex:1 1 0;min-height:0;display:block}
+
+/* 当前环节指示条 */
+.map-status{
+  flex:0 0 auto;display:flex;align-items:center;gap:.6vw;
+  padding:.5vh .9vw;margin-bottom:.6vh;
+  border:1px solid var(--ink-ghost);border-radius:4px;
+  background:rgba(255,255,255,.5);
+}
+.map-status .lb{
+  font-size:clamp(9px,1.2vh,14px);color:var(--ink-faint);letter-spacing:.1em;flex:0 0 auto;
+}
+.map-status b{
+  font-family:var(--font-title);font-size:clamp(13px,1.7vh,20px);
+  letter-spacing:.1em;color:var(--qing);font-weight:400;
+}
+.map-status .ly{
+  margin-left:auto;font-size:clamp(9px,1.2vh,14px);color:var(--ink-soft);letter-spacing:.08em;
+}
+
+/* 图例 */
+.legend{
+  flex:0 0 auto;display:flex;flex-wrap:wrap;gap:.2vw .9vw;justify-content:center;
+  font-size:clamp(9px,1.2vh,14px);color:var(--ink-soft);letter-spacing:.08em;margin-top:.4vh;
+}
+.legend span{display:flex;align-items:center;gap:.3vw}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.legend i.ok{background:#EDF3EC;border:1.5px solid var(--green)}
+.legend i.err{background:#FBEDEA;border:1.5px solid var(--zhu)}
+.legend i.ctx{background:#FCF5E3;border:1.5px solid var(--teng)}
+.legend i.breath{background:transparent;border:1.5px solid var(--teng);box-shadow:0 0 0 2px rgba(192,138,30,.35)}
+
+/* 层框（大组）与 ASR 子面板（小组） */
+.frame{fill:rgba(46,43,38,.055);stroke:rgba(46,43,38,.42);stroke-width:2;stroke-dasharray:10 6}
+.frame-tag{fill:rgba(251,248,240,.92);stroke:rgba(46,43,38,.22);stroke-width:1}
+.frame-t{fill:var(--ink);font-family:var(--font-title);font-size:23px;letter-spacing:.14em;font-weight:600}
+.sub-panel{fill:rgba(78,122,82,.09);stroke:rgba(78,122,82,.62);stroke-width:1.6;stroke-dasharray:6 5}
+.sub-t{fill:#3B6B45;font-family:var(--font-title);font-size:17px;letter-spacing:.06em;text-anchor:middle}
+.in-hint{fill:none;stroke:rgba(46,43,38,.42);stroke-width:2.4;stroke-linecap:round}
+
+/* 节点（玉璧）· 初始：淡墨灰 */
+.node .body{fill:#EDE8DA;stroke:rgba(46,43,38,.38);stroke-width:1.8;transition:fill .5s,stroke .5s}
+.node .ring{fill:none;stroke:rgba(46,43,38,.18);stroke-width:1;transition:stroke .5s}
+.node .nl{fill:rgba(46,43,38,.72);font-family:var(--font-body);font-size:20px;text-anchor:middle;transition:fill .5s}
+.node .nc{fill:rgba(46,43,38,.45);font-family:var(--font-body);font-size:13px;text-anchor:middle;letter-spacing:.1em;transition:fill .5s}
+.node.sm .nl{font-size:16px}
+.node.sm .nc{font-size:12px}
+
+/* 出错环节徽记：只标在根因节点上 */
+.badge{opacity:0;transition:opacity .45s}
+.node.err .badge{opacity:1}
+.badge circle{fill:var(--zhu)}
+.badge text{fill:#FFF8F2;font-family:var(--font-title);font-size:15px;text-anchor:middle}
+
+/* 节点三态：绿＝尽职，红＝出错，黄＝调用语境 */
+.node.ok  .body{fill:#EDF3EC;stroke:var(--green);stroke-width:2}
+.node.ok  .ring{stroke:rgba(74,122,82,.4)}
+.node.ok  .nl,.node.ok .nc{fill:#3B6B45}
+.node.ok  .body{filter:drop-shadow(0 0 5px rgba(74,122,82,.28))}
+.node.err .body{fill:#FBEDEA;stroke:var(--zhu);stroke-width:2.2}
+.node.err .ring{stroke:rgba(176,58,46,.42)}
+.node.err .nl,.node.err .nc{fill:var(--zhu)}
+.node.err .body{filter:drop-shadow(0 0 6px rgba(176,58,46,.35))}
+.node.ctx .body{fill:#FCF5E3;stroke:var(--teng);stroke-width:2}
+.node.ctx .ring{stroke:rgba(192,138,30,.42)}
+.node.ctx .nl,.node.ctx .nc{fill:#8A6210}
+.node.ctx .body{filter:drop-shadow(0 0 5px rgba(192,138,30,.32))}
+
+/* 呼吸光圈：金色，用于引导视线 */
+.halo{fill:none;stroke-width:9;stroke:#C08A1E;opacity:0;filter:blur(4px)}
+.node.breath .halo{animation:breathe 1.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.2}50%{opacity:.95}}
+
+/* 数据流连线：水墨连廊 */
+.cbg{fill:none;stroke:rgba(46,43,38,.18);stroke-linecap:round;stroke-linejoin:round;stroke-width:13}
+.cf{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:4.4;opacity:0;
+    stroke-dasharray:9 41;transition:stroke .45s}
+.on .cf{opacity:.92;animation:flowUp 1.5s linear infinite}
+@keyframes flowUp{from{stroke-dashoffset:50}to{stroke-dashoffset:0}}
+.corridor.ok  .cf{stroke:var(--green);filter:drop-shadow(0 0 4px rgba(74,122,82,.75))}
+.corridor.err .cf{stroke:var(--zhu);filter:drop-shadow(0 0 5px rgba(176,58,46,.85))}
+.corridor.err .cbg{stroke:rgba(176,58,46,.15)}
+.arrow{fill:none;stroke:rgba(46,43,38,.3);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* SST 上方输出声波 */
+.wave{
+  fill:none;stroke:rgba(46,43,38,.28);stroke-width:2.6;stroke-linecap:round;
+  opacity:.5;transform-box:fill-box;transform-origin:50% 100%;
+}
+.wave.red{stroke:var(--zhu)}
+.wave.go{animation:waveOut 1.5s ease-out infinite}
+@keyframes waveOut{
+  0%{opacity:.22;transform:scale(.84)}
+  45%{opacity:1;transform:scale(1)}
+  100%{opacity:.28;transform:scale(1.08)}
+}
+
+/* ============ 右：古卷控制台 ============ */
+.console{
+  position:relative;min-width:0;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--parch) 0%,#F4EBD6 55%,var(--parch-2) 100%);
+  border-radius:2px;
+  box-shadow:0 4px 18px rgba(80,64,40,.18),inset 0 0 0 1px rgba(140,112,66,.22);
+  padding:0;
+}
+.console::before,.console::after{
+  content:"";position:absolute;left:-10px;right:-10px;height:14px;
+  background:linear-gradient(180deg,#6E5233,#B08C5E 40%,#D6B786 56%,#7A5B38);
+  border-radius:4px;box-shadow:0 2px 7px rgba(60,44,24,.32);z-index:3;
+}
+.console::before{top:-7px}
+.console::after{bottom:-7px}
+.console-inner{
+  flex:1;min-height:0;
+  padding:2.2vh 2vw;
+  display:flex;flex-direction:column;
+}
+
+/* 关卡进度 */
+.steps{display:flex;align-items:center;gap:1vw;margin-bottom:1.4vh}
+.step{display:flex;align-items:center;gap:.5vw;color:var(--ink-faint)}
+.step .dot{
+  width:clamp(18px,2.3vh,28px);height:clamp(18px,2.3vh,28px);border-radius:50%;
+  border:1.5px solid var(--ink-ghost);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);font-size:clamp(10px,1.3vh,15px);
+}
+.step .nm{font-family:var(--font-title);font-size:clamp(12px,1.5vh,18px);letter-spacing:.14em}
+.step.now .dot{border-color:var(--qing);background:rgba(31,78,74,.1);color:var(--qing)}
+.step.now .nm{color:var(--ink)}
+.step.done .dot{border-color:var(--green);color:var(--green)}
+.step.bad  .dot{border-color:var(--zhu);color:var(--zhu)}
+.step.bad  .nm{color:var(--zhu)}
+
+/* 关卡标题 */
+.gtitle{
+  font-family:var(--font-title);
+  font-size:clamp(18px,2.5vh,30px);letter-spacing:.2em;
+  display:flex;align-items:baseline;gap:.8vw;margin-bottom:1.2vh;
+}
+.gtitle .no{font-size:.72em;color:var(--ink-faint);letter-spacing:.1em}
+.gtitle .ln{flex:1;height:1px;background:var(--ink-ghost)}
+
+/* 卷轴内容区 */
+.stagebox{
+  position:relative;flex:1;min-height:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:.6vh 0;
+}
+.line{
+  font-size:clamp(14px,1.95vh,23px);line-height:1.85;letter-spacing:.06em;
+  color:var(--ink);margin-bottom:.7vh;
+}
+.line.dim{color:var(--ink-soft)}
+.line .hl{color:var(--zhu)}
+.line .ok{color:var(--green)}
+
+/* 拼音打字机 */
+.py-big{
+  font-family:var(--font-body);
+  font-size:clamp(34px,6.4vh,76px);letter-spacing:.08em;line-height:1.2;
+  color:var(--ink);margin:.6vh 0 1vh;min-height:1.3em;
+}
+.py-big .tone{color:var(--zhu)}
+.py-big .cur{color:var(--ink-faint);animation:blink .9s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* 水墨波纹 */
+.ripple{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
+  width:clamp(120px,17vh,210px);height:clamp(120px,17vh,210px);pointer-events:none}
+.ripple span{position:absolute;inset:0;border:1.5px solid rgba(46,43,38,.45);border-radius:50%;opacity:0}
+.ripple.go span{animation:rip 1.5s ease-out forwards}
+.ripple.go span:nth-child(2){animation-delay:.22s}
+.ripple.go span:nth-child(3){animation-delay:.44s}
+@keyframes rip{0%{transform:scale(.18);opacity:.8}100%{transform:scale(2);opacity:0}}
+
+/* 候选笔触：底纹为荷叶与莲蓬（呼应《清平乐·村居》的溪头意境） */
+.cands{
+  position:relative;
+  display:flex;flex-direction:column;gap:clamp(5px,1vh,14px);margin:.4vh 0 .8vh;
+}
+.cands::before{
+  content:'';position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+  width:min(34%,260px);height:120%;pointer-events:none;opacity:.10;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='%234E7A52'%3E%3Cpath d='M18 146c0-42 32-76 72-76s72 34 72 76c0 9-9 9-13 4-15-15-36-24-59-24s-44 9-59 24c-4 5-13 5-13-4z'/%3E%3Cellipse cx='152' cy='56' rx='44' ry='30' transform='rotate(-18 152 56)' opacity='.75'/%3E%3Ccircle cx='62' cy='116' r='27'/%3E%3Ccircle cx='62' cy='116' r='17' fill='%23F6F3E5'/%3E%3Ccircle cx='54' cy='108' r='3.6'/%3E%3Ccircle cx='70' cy='108' r='3.6'/%3E%3Ccircle cx='54' cy='124' r='3.6'/%3E%3Ccircle cx='70' cy='124' r='3.6'/%3E%3Ccircle cx='62' cy='116' r='3.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* 系统警告框：只呈现机器的判定倾向 */
+.warn-box{
+  position:relative;margin:.5vh 0 .7vh;
+  padding:clamp(6px,1vh,12px) clamp(10px,1.2vw,18px);
+  border:1px solid rgba(176,58,46,.42);
+  border-left:4px solid var(--zhu);
+  background:linear-gradient(90deg,rgba(176,58,46,.09),rgba(176,58,46,.015));
+  font-size:clamp(12px,1.48vh,17px);line-height:1.62;
+  animation:warnBlink 1.6s ease-in-out infinite;
+}
+.warn-box .wt{color:var(--zhu);font-weight:700;letter-spacing:.06em}
+@keyframes warnBlink{
+  0%,100%{opacity:1;box-shadow:0 0 0 rgba(176,58,46,0)}
+  50%    {opacity:.86;box-shadow:0 0 16px rgba(176,58,46,.20)}
+}
+.cand{
+  display:grid;grid-template-columns:minmax(120px,.9fr) auto 1fr;
+  align-items:center;gap:clamp(10px,1.2vw,22px);
+}
+.cand .stroke{width:100%;height:clamp(22px,3.4vh,40px);display:block;overflow:visible}
+.cand .cw{font-family:var(--font-title);font-size:clamp(22px,3.4vh,42px);letter-spacing:.12em;line-height:1}
+.cand .an{font-size:clamp(11px,1.42vh,17px);color:var(--ink-soft);letter-spacing:.04em;line-height:1.5}
+.cand.pick .cw{color:var(--zhu)}
+.cand.rare .cw{color:var(--teng)}
+.cand.rare .an{color:var(--teng)}
+.seg{transition:transform .95s cubic-bezier(.2,.7,.3,1),opacity .95s ease}
+.cand.shatter .seg{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}
+/* 朱砂"定"印 */
+.ding{
+  position:absolute;right:clamp(6px,1vw,18px);top:50%;
+  width:clamp(44px,6vh,74px);height:clamp(44px,6vh,74px);
+  border:3px solid var(--zhu);border-radius:4px;color:var(--zhu);
+  font-family:var(--font-title);display:flex;align-items:center;justify-content:center;
+  font-size:clamp(22px,3.2vh,42px);line-height:1;
+  opacity:0;transform:translateY(-50%) rotate(-8deg) scale(2.4);filter:blur(8px);
+  box-shadow:inset 0 0 0 1px rgba(176,58,46,.25);
+}
+.ding.stamp{animation:ding .55s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes ding{
+  0%{opacity:0;transform:translateY(-50%) rotate(-20deg) scale(2.4);filter:blur(8px)}
+  55%{opacity:1;transform:translateY(-50%) rotate(-6deg) scale(.92);filter:blur(0)}
+  100%{opacity:1;transform:translateY(-50%) rotate(-8deg) scale(1);filter:blur(0)}
+}
+.foot-note{
+  font-size:clamp(11px,1.4vh,16px);color:var(--ink-faint);letter-spacing:.06em;
+  line-height:1.6;border-top:1px dashed var(--ink-ghost);padding-top:.8vh;margin-top:.4vh;
+}
+
+/* 按钮区 */
+.actions{
+  display:flex;flex-wrap:wrap;gap:clamp(10px,1.2vw,20px);
+  padding-top:1.6vh;border-top:1px solid var(--ink-ghost);margin-top:1vh;
+}
+.wood{
+  position:relative;
+  font-family:var(--font-title);
+  font-size:clamp(15px,2.05vh,26px);
+  letter-spacing:.16em;text-indent:.16em;
+  color:#FBF3E1;padding:clamp(7px,1.05vh,14px) clamp(16px,1.8vw,32px);
+  border:1px solid #6B4E30;border-radius:6px;
+  background:linear-gradient(#A98359,#8A6743 55%,#7C5C3B);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -3px 8px rgba(60,40,20,.35),
+             0 4px 0 #5F4327,0 8px 15px rgba(50,36,18,.24);
+  text-shadow:0 1px 1px rgba(40,26,12,.55);cursor:pointer;
+  transition:transform .12s,box-shadow .12s,filter .2s;
+}
+.wood:hover{filter:brightness(1.07)}
+.wood:active{transform:translateY(3px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -2px 6px rgba(60,40,20,.35),
+             0 1px 0 #5F4327,0 3px 8px rgba(50,36,18,.22)}
+.wood.warn{background:linear-gradient(#B8564A,#9E3B2F 55%,#8C3428);border-color:#7A2C22}
+.wood.alt{background:linear-gradient(#8E8C74,#71705C 55%,#63624F);border-color:#504F3E}
+.wood[disabled]{opacity:.4;cursor:default;filter:none}
+
+/* 播报框 */
+.bcast{
+  border:1.5px solid var(--zhu);border-radius:4px;background:rgba(176,58,46,.06);
+  padding:clamp(10px,1.5vh,20px) clamp(14px,1.6vw,26px);
+  font-size:clamp(16px,2.3vh,30px);letter-spacing:.1em;color:var(--zhu);
+  font-family:var(--font-title);line-height:1.6;
+}
+.final{
+  font-family:var(--font-title);
+  font-size:clamp(15px,2.15vh,27px);line-height:1.9;letter-spacing:.1em;color:var(--ink);
+}
+.final .em{color:var(--zhu)}
+
+/* 水墨淡入 */
+.fade{opacity:0;transform:translateY(6px);transition:opacity .55s ease,transform .55s ease}
+.fade.show{opacity:1;transform:none}
+.inkin{opacity:0}
+.inkin.show{animation:inkin .8s cubic-bezier(.22,.62,.34,1) forwards}
+@keyframes inkin{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);filter:blur(10px)}
+  30%{opacity:1}
+  100%{opacity:1;clip-path:inset(0 -6% 0 0);filter:blur(0)}
+}
+
+/* 全屏朱砂晕染 */
+.redwash{
+  position:fixed;inset:0;pointer-events:none;z-index:9;opacity:0;
+  background:radial-gradient(65% 60% at 50% 45%,rgba(176,58,46,.30),rgba(176,58,46,0) 72%);
+  transition:opacity .6s ease;
+}
+.redwash.go{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  .inkin.show,.ripple.go span,.node.breath .halo{animation:none}
+  .inkin.show{opacity:1;clip-path:none;filter:none}
+  .fade{transition:none}
+}
+
+</style>
+</head>
+<body>
+
+<nav class="wbnav">
+  <span class="wb-brand">诗音解密 · 双场景</span>
+  <span class="wb-tip">快捷键 1 / 2 切换</span>
+  <div class="wb-tabs">
+    <button class="wbtab on" id="tabA">① 翻车现场</button>
+    <button class="wbtab" id="tabB">② 后台推演</button>
+  </div>
+</nav>
+
+<section class="scene" id="sceneA">
+<div class="ff-app" id="ff-app" data-state="idle">
+
+  <!-- 顶部状态栏 -->
+  <div class="ff-header">
+    <div class="ff-brand">诗音解密<em>V1.0</em></div>
+    <div class="ff-status"><span class="ff-dot" id="ff-dot"></span><span id="ff-statusTxt">系统在线</span></div>
+  </div>
+
+  <!-- 诗词展示区 -->
+  <div class="ff-poem">
+    <div class="ff-src">清平乐·村居 · 辛弃疾</div>
+    <div class="ff-line">最喜小儿<u>亡</u>赖，溪头卧剥莲蓬。</div>
+  </div>
+
+  <!-- 动态波形区 -->
+  <div class="ff-wave" id="ff-waveBox">
+    <div class="ff-axis"></div>
+    <canvas id="ff-wave"></canvas>
+  </div>
+
+  <!-- 核心交互区 -->
+  <div class="ff-mic-zone">
+    <div class="ff-mic-wrap">
+      <div class="ff-halo"></div>
+      <div class="ff-mic" id="ff-mic">
+        <svg viewBox="0 0 64 64" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M32 7c-7.2 0-12.5 5.3-12.5 12.5v11.8c0 7.2 5.3 12.5 12.5 12.5s12.5-5.3 12.5-12.5V19.5C44.5 12.3 39.2 7 32 7z" fill="rgba(31,78,74,.07)"/>
+          <path d="M17.5 33.5c0 10.2 6.5 16.7 14.5 16.7s14.5-6.5 14.5-16.7"/>
+          <line x1="32" y1="50.2" x2="32" y2="58"/>
+          <line x1="22" y1="58" x2="42" y2="58"/>
+        </svg>
+      </div>
+    </div>
+    <div class="ff-hint" id="ff-hint">调试完毕，等待语音输入…</div>
+    <div class="ff-timer" id="ff-timer"></div>
+  </div>
+
+  <!-- 太极加载环 -->
+  <div class="ff-loader" id="ff-loader">
+    <svg class="ff-ring" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#1F4E4A" stroke-opacity=".22" stroke-width="2"/>
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#1F4E4A" stroke-width="3.4"
+              stroke-linecap="round" stroke-dasharray="52 224" transform="rotate(-90 50 50)"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="#B03A2E" stroke-opacity=".35" stroke-width="1.6"
+              stroke-linecap="round" stroke-dasharray="20 206" transform="rotate(120 50 50)"/>
+    </svg>
+    <svg class="ff-taiji" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="#F5F1E8" stroke="#1F4E4A" stroke-width="2"/>
+      <path d="M50 4a46 46 0 0 1 0 92 23 23 0 0 1 0-46 23 23 0 0 0 0-46z" fill="#1F4E4A"/>
+      <circle cx="50" cy="27" r="7" fill="#F5F1E8"/>
+      <circle cx="50" cy="73" r="7" fill="#1F4E4A"/>
+    </svg>
+  </div>
+
+  <!-- 底部控制区 -->
+  <div class="ff-footer">
+    <div class="ff-progress" id="ff-progBox"><i id="ff-prog"></i></div>
+    <button class="ff-wood" id="ff-mainBtn">开 始 录 音</button>
+  </div>
+
+  <!-- 边缘红光 -->
+  <div class="ff-edge" id="ff-edge"></div>
+
+  <!-- 报错弹窗 -->
+  <div class="ff-mask" id="ff-mask">
+    <div class="ff-card">
+      <div class="ff-tag">【纠错】</div>
+      <div class="ff-lead">你背成了</div>
+      <div class="ff-word">最喜小儿<span>无</span>赖</div>
+      <div class="ff-again">请 重 背</div>
+      <div class="ff-meta">
+        声学匹配：wú lài · 置信度 96.4%<br>
+        语言模型候选：无赖 96.4% ｜ 亡赖 2.1% ｜ 无籁 1.5%
+      </div>
+      <div class="ff-acts">
+        <button class="ff-mini" id="ff-btnRetry">再录一次</button>
+        <button class="ff-mini ff-ghost" id="ffGotoB">打开后台推演 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 隐藏热区：右下角连续点击 3 下 → 直达报错 -->
+  <div class="ff-hot" id="ff-hot"></div>
+</div>
+</section>
+
+<section class="scene" id="sceneB" hidden>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="paperNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="inkRough" x="-25%" y="-60%" width="150%" height="220%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035 0.16" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="inkRough2" x="-25%" y="-80%" width="150%" height="260%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.2" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="page">
+  <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#paperNoise)"/></svg>
+
+  <svg class="mountains" viewBox="0 0 1600 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,300 L0,196 Q62,124 132,166 Q196,204 254,142 Q316,74 386,134 Q448,188 512,152
+             Q574,116 636,162 Q706,214 774,148 Q846,78 916,140 Q980,196 1046,152
+             Q1112,108 1180,158 Q1248,208 1318,148 Q1388,88 1458,142 Q1526,194 1600,154 L1600,300 Z"
+          fill="#2E2B26" opacity=".08"/>
+    <path d="M0,300 L0,244 Q74,190 152,228 Q232,266 314,208 Q398,148 480,200 Q562,252 646,194
+             Q730,136 812,190 Q894,244 974,204 Q1056,162 1138,208 Q1220,254 1302,202
+             Q1384,150 1466,198 Q1530,236 1600,206 L1600,300 Z"
+          fill="#2E2B26" opacity=".12"/>
+  </svg>
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <h1>三关推演·亡赖迷案</h1>
+    <div class="seal-zhu">推演</div>
+    <span class="sub">语音识别三层流水线 · 逐环记录处理结果</span>
+    <div class="right">
+      <button class="ghost" id="btnReset" type="button">复始</button>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <div class="body">
+
+    <!-- 左：系统全景经脉图 -->
+    <section class="map">
+      <div class="map-status">
+        <span class="lb">当前环节</span>
+        <b id="msNode">—</b>
+        <span class="ly" id="msLayer">待启动</span>
+      </div>
+      <svg id="mapSvg" viewBox="0 0 620 748" preserveAspectRatio="xMidYMid meet" aria-label="语音交互系统三层经脉图"></svg>
+      <div class="legend">
+        <span><i class="ok"></i>尽职</span>
+        <span><i class="err"></i>出错</span>
+        <span><i class="ctx"></i>被调用</span>
+        <span><i class="breath"></i>正在处理</span>
+      </div>
+      <div class="cap">对照教材 P2 图 2-32「语音交互系统」（输入层内嵌 P5 语音识别结构）</div>
+    </section>
+
+    <!-- 右：古卷控制台 -->
+    <section class="console">
+      <div class="console-inner">
+        <div class="steps" id="steps">
+          <div class="step now" data-s="1"><span class="dot">一</span><span class="nm">听音辨字</span></div>
+          <div class="step" data-s="2"><span class="dot">二</span><span class="nm">选字定夺</span></div>
+          <div class="step" data-s="3"><span class="dot">三</span><span class="nm">断案定责</span></div>
+        </div>
+        <div class="gtitle">
+          <span class="no" id="gno">第一关</span>
+          <span id="gname">听音辨字</span>
+          <span class="ln"></span>
+        </div>
+
+        <div class="stagebox" id="stage">
+          <div class="ripple" id="ripple"><span></span><span></span><span></span></div>
+          <!-- 内容由脚本注入 -->
+        </div>
+
+        <div class="actions" id="actions"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="redwash" id="redwash"></div>
+</section>
+
+<script>
+
+(function(){
+  "use strict";
+
+  /* =========================================================
+     常量
+     ========================================================= */
+  var MAX_SEC = 15;      // 保险二：录音 15 秒自动结束
+  var FAKE_MS = 1500;    // 第三幕：伪装识别 1.5 秒
+
+  var app   = document.getElementById('ff-app');
+  var mic   = document.getElementById('ff-mic');
+  var hint  = document.getElementById('ff-hint');
+  var timer = document.getElementById('ff-timer');
+  var btn   = document.getElementById('ff-mainBtn');
+  var waveBox = document.getElementById('ff-waveBox');
+  var cv    = document.getElementById('ff-wave');
+  var c2    = cv.getContext('2d');
+  var loader= document.getElementById('ff-loader');
+  var edge  = document.getElementById('ff-edge');
+  var mask  = document.getElementById('ff-mask');
+  var progBox = document.getElementById('ff-progBox');
+  var prog  = document.getElementById('ff-prog');
+  var dot   = document.getElementById('ff-dot');
+  var statusTxt = document.getElementById('ff-statusTxt');
+
+  var state = 'idle';          // idle | rec | proc | err
+  var raf = null;
+  var recStart = 0, tickTimer = null, endTimer = null;
+  var level = 0;               // 平滑后的音量
+  var simEnv = 0.55, simPhase = 0;
+
+  /* =========================================================
+     音频引擎（音效合成，全程离线，不依赖网络）
+     ========================================================= */
+  var AC = null;
+  function ac(){
+    if(!AC){
+      var C = window.AudioContext || window.webkitAudioContext;
+      if(!C) return null;
+      AC = new C();
+    }
+    if(AC.state === 'suspended') AC.resume();
+    return AC;
+  }
+  function noiseBuf(ctx, sec){
+    var len = Math.floor(ctx.sampleRate * sec);
+    var b = ctx.createBuffer(1, len, ctx.sampleRate);
+    var d = b.getChannelData(0);
+    for(var i=0;i<len;i++) d[i] = Math.random()*2-1;
+    return b;
+  }
+  // 古琴拨弦
+  function pluck(freq, at, dur, vol){
+    var ctx = ac(); if(!ctx) return;
+    var t = ctx.currentTime + at;
+    [1, 2.02, 3.01].forEach(function(mul, i){
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(freq*mul, t);
+      o.frequency.exponentialRampToValueAtTime(freq*mul*0.985, t+dur);
+      var v = vol / (i*2.6 + 1);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(v, t+0.008);
+      g.gain.exponentialRampToValueAtTime(0.0008, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.05);
+    });
+  }
+  // 第三幕：古琴扫弦 + 键盘敲击
+  function sfxThinking(){
+    var ctx = ac(); if(!ctx) return;
+    var scale = [196, 220, 262, 294, 330, 392, 440];
+    for(var i=0;i<7;i++) pluck(scale[i], i*0.055, 0.9, 0.085);
+    // 键盘敲击（极短噪声脉冲）
+    for(var k=0;k<9;k++){
+      (function(delay){
+        var src = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+        src.buffer = noiseBuf(ctx, 0.05);
+        f.type = 'bandpass'; f.frequency.value = 1800 + Math.random()*1600; f.Q.value = 1.2;
+        var t = ctx.currentTime + delay;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.16, t+0.003);
+        g.gain.exponentialRampToValueAtTime(0.0008, t+0.045);
+        src.connect(f); f.connect(g); g.connect(ctx.destination);
+        src.start(t); src.stop(t+0.06);
+      })(0.18 + k*0.075 + Math.random()*0.03);
+    }
+  }
+  // 第四幕：破锣 / 报错音
+  function sfxError(){
+    var ctx = ac(); if(!ctx) return;
+    var t = ctx.currentTime;
+    // 锣体：低频三角波 + 下滑
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(275, t);
+    o.frequency.exponentialRampToValueAtTime(96, t+1.5);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.30, t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0008, t+1.6);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+1.7);
+    // 金属噪声层
+    var src = ctx.createBufferSource(), ng = ctx.createGain(), f = ctx.createBiquadFilter();
+    src.buffer = noiseBuf(ctx, 1.6);
+    f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 0.7;
+    ng.gain.setValueAtTime(0.20, t);
+    ng.gain.exponentialRampToValueAtTime(0.0008, t+1.4);
+    src.connect(f); f.connect(ng); ng.connect(ctx.destination);
+    src.start(t); src.stop(t+1.6);
+  }
+  function buzz(ms){
+    if(navigator.vibrate){ try{ navigator.vibrate(ms); }catch(e){} }
+  }
+
+  /* =========================================================
+     波形绘制（真实麦克风优先，失败则无缝降级为模拟波形）
+     ========================================================= */
+  var audioCtx = null, analyser = null, timeData = null, micStream = null;
+
+  function resizeCanvas(){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if(w === 0 || h === 0) return;
+    cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+    c2.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', function(){ resizeCanvas(); if(!raf) drawStatic(); });
+
+  function attachMic(){
+    // 异步尝试真实麦克风；成功则接管数据源，失败则保持模拟。全过程不阻塞 UI。
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    try{
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+        micStream = stream;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.75;
+        timeData = new Uint8Array(analyser.fftSize);
+        audioCtx.createMediaStreamSource(stream).connect(analyser);
+      }).catch(function(){ /* 静默降级，模拟波形继续 */ });
+    }catch(e){ /* 非安全上下文：静默降级 */ }
+  }
+  function stopMic(){
+    try{ if(micStream) micStream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){}
+    try{ if(audioCtx && audioCtx.close) audioCtx.close(); }catch(e){}
+    micStream = null; analyser = null; audioCtx = null;
+  }
+
+  function realPoints(n){
+    analyser.getByteTimeDomainData(timeData);
+    var step = Math.floor(timeData.length / n);
+    var out = new Array(n), sum = 0;
+    for(var i=0;i<n;i++){
+      var m = 0;
+      for(var j=0;j<step;j++){
+        var v = (timeData[i*step+j] - 128) / 128;
+        sum += v*v;
+        if(Math.abs(v) > Math.abs(m)) m = v;
+      }
+      out[i] = m;
+    }
+    var rms = Math.sqrt(sum / (n*step));
+    var lv = Math.min(1, rms * 5.2);
+    level = level*0.75 + lv*0.25;
+    return out;
+  }
+  function simPoints(n){
+    simPhase += 0.075;
+    var lo = (state === 'rec') ? 0.34 : 0.10;   // 待机只留微弱呼吸
+    var hi = (state === 'rec') ? 1.00 : 0.26;
+    simEnv += (Math.random()-0.5)*0.16;
+    if(simEnv < lo) simEnv = lo;
+    if(simEnv > hi) simEnv = hi;
+    level = level*0.7 + simEnv*0.3;
+    var out = new Array(n);
+    for(var i=0;i<n;i++){
+      var u = i/(n-1);
+      var v = Math.sin(u*Math.PI*5.5 + simPhase)*0.62
+            + Math.sin(u*Math.PI*11.5 - simPhase*0.8)*0.26
+            + (Math.random()-0.5)*0.14;
+      out[i] = v * (0.55 + 0.45*Math.sin(Math.PI*u));
+    }
+    return out;
+  }
+
+  function draw(){
+    raf = requestAnimationFrame(draw);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if(!w || !h) return;
+    c2.clearRect(0,0,w,h);
+
+    var N = 72;
+    var pts = (analyser && state === 'rec') ? realPoints(N) : simPoints(N);
+    var amp = (0.06 + Math.min(1, level) * 0.92) * (h/2) * 0.86;
+
+    var px = new Array(N), py = new Array(N);
+    for(var i=0;i<N;i++){
+      px[i] = (i/(N-1)) * w;
+      py[i] = h/2 - pts[i] * amp;
+    }
+
+    // 墨青渐变波形
+    var grad = c2.createLinearGradient(0,0,w,0);
+    grad.addColorStop(0,   'rgba(31,78,74,0.10)');
+    grad.addColorStop(0.5, 'rgba(31,78,74,0.95)');
+    grad.addColorStop(1,   'rgba(31,78,74,0.10)');
+
+    c2.beginPath();
+    c2.moveTo(px[0], py[0]);
+    for(var k=1;k<N;k++){
+      var cx = (px[k-1]+px[k])/2, cy = (py[k-1]+py[k])/2;
+      c2.quadraticCurveTo(px[k-1], py[k-1], cx, cy);
+    }
+    c2.lineTo(px[N-1], py[N-1]);
+    c2.strokeStyle = grad;
+    c2.lineWidth = Math.max(1.6, h*0.035);
+    c2.lineCap = 'round';
+    c2.shadowColor = 'rgba(31,78,74,.35)';
+    c2.shadowBlur = 8;
+    c2.stroke();
+    c2.shadowBlur = 0;
+
+    // 半透明镜像（增加"声波"体量感）
+    c2.globalAlpha = 0.16;
+    c2.lineWidth = 1;
+    c2.beginPath();
+    for(var m=0;m<N;m++){
+      var yy = h/2 + (h/2 - py[m]) * 0.42;
+      if(m === 0) c2.moveTo(px[m], yy); else c2.lineTo(px[m], yy);
+    }
+    c2.strokeStyle = '#1F4E4A';
+    c2.stroke();
+    c2.globalAlpha = 1;
+  }
+  function startDraw(){ if(!raf){ resizeCanvas(); raf = requestAnimationFrame(draw); } }
+  function stopDraw(){ if(raf){ cancelAnimationFrame(raf); raf = null; } c2.clearRect(0,0,cv.width,cv.height); }
+  /* 待机：画布清空，只留 CSS 的虚线中轴作静止基线，波形完全不动；
+     只有点了「开始录音」才启动 rAF 动画 */
+  function drawStatic(){
+    resizeCanvas();
+    c2.clearRect(0,0,cv.width,cv.height);
+  }
+
+  /* =========================================================
+     状态机：四幕剧
+     ========================================================= */
+  function setState(s){ state = s; app.setAttribute('data-state', s); }
+
+  function fmt(s){
+    s = Math.max(0, Math.floor(s));
+    return (s<10?'0':'') + s;
+  }
+
+  // 第一幕 → 第二幕：开始录音
+  function startRec(){
+    if(state === 'rec' || state === 'proc') return;
+    ac();                       // 用户手势内初始化音频
+    resetErrorUI();
+    setState('rec');
+    hint.textContent = '正在聆听…';
+    hint.style.color = '';
+    timer.textContent = '00:00';
+    timer.classList.add('ff-on');
+    btn.textContent = '结 束 录 音';
+    btn.classList.add('ff-rec');
+    btn.disabled = false;
+    progBox.classList.add('ff-on');
+    prog.style.width = '0%';
+    waveBox.classList.remove('ff-hide');
+    startDraw();
+    buzz(35);                   // 轻微触觉反馈
+    recStart = Date.now();
+
+    tickTimer = setInterval(function(){
+      var el = (Date.now() - recStart)/1000;
+      timer.textContent = '00:' + fmt(el);
+      prog.style.width = Math.min(100, el/MAX_SEC*100) + '%';
+    }, 100);
+
+    // 保险二：15 秒强制结束
+    endTimer = setTimeout(function(){ finishRec(true); }, MAX_SEC*1000);
+
+    // 真实麦克风异步接入（权限弹窗不阻塞流程）
+    attachMic();
+  }
+
+  // 第二幕 → 第三幕：结束录音，进入伪装识别
+  function finishRec(auto){
+    if(state !== 'rec') return;
+    clearInterval(tickTimer); clearTimeout(endTimer);
+    timer.classList.remove('ff-on');
+    stopMic();
+    waveBox.classList.add('ff-hide');
+    stopDraw();
+    btn.disabled = true;
+    btn.textContent = '识 别 中…';
+    setState('proc');
+    hint.textContent = '录音完成，正在解析…';
+
+    loader.classList.remove('ff-broken');
+    loader.classList.add('ff-on');
+    sfxThinking();
+
+    setTimeout(function(){ hint.textContent = '正在提取声学特征…'; }, 120);
+    setTimeout(function(){ hint.textContent = '正在匹配语言模型…'; }, 780);
+
+    // 1.5 秒后进入第四幕
+    setTimeout(function(){ showError(); }, FAKE_MS);
+    if(auto) { /* 自动结束时无需额外提示，流程继续 */ }
+  }
+
+  // 第三幕 → 第四幕：精准报错
+  function showError(){
+    setState('err');
+    // 环碎裂
+    loader.classList.add('ff-broken');
+    var fragHtml = '';
+    for(var i=0;i<8;i++) fragHtml += '<div class="frag"></div>';
+    loader.insertAdjacentHTML('beforeend', fragHtml);
+    var frags = loader.querySelectorAll('.frag');
+    for(var k=0;k<frags.length;k++){
+      var ang = (Math.PI*2/8)*k + 0.4;
+      var dist = 46 + Math.random()*30;
+      frags[k].style.setProperty('--rot', (ang*57.3) + 'deg');
+      frags[k].style.setProperty('--tx', (Math.cos(ang)*dist).toFixed(1) + 'px');
+      frags[k].style.setProperty('--ty', (Math.sin(ang)*dist).toFixed(1) + 'px');
+      frags[k].classList.add('ff-go');
+    }
+    setTimeout(function(){
+      var old = loader.querySelectorAll('.frag');
+      for(var i=0;i<old.length;i++) old[i].remove();
+      loader.classList.remove('ff-on','ff-broken');
+    }, 700);
+
+    hint.textContent = '匹配完成，结果异常';
+    hint.style.color = '#B03A2E';
+    btn.disabled = false;
+    btn.classList.remove('ff-rec');
+    btn.textContent = '重 新 录 音';
+    progBox.classList.remove('ff-on');
+    prog.style.width = '0%';
+
+    edge.classList.remove('ff-on');
+    void edge.offsetWidth;
+    edge.classList.add('ff-on');
+    sfxError();
+    buzz([420, 90, 260]);       // 长震 + 停顿 + 再震
+
+    setTimeout(function(){ mask.classList.add('ff-on'); }, 260);
+    dot.classList.add('ff-bad');
+    statusTxt.textContent = '识别异常';
+  }
+
+  function resetErrorUI(){
+    mask.classList.remove('ff-on');
+    edge.classList.remove('ff-on');
+    dot.classList.remove('ff-bad');
+    statusTxt.textContent = '系统在线';
+    hint.style.color = '';
+  }
+
+  // 回到第一幕
+  function toIdle(){
+    clearInterval(tickTimer); clearTimeout(endTimer);
+    stopMic(); stopDraw();
+    resetErrorUI();
+    setState('idle');
+    hint.textContent = '调试完毕，等待语音输入…';
+    timer.textContent = '';
+    timer.classList.remove('ff-on');
+    btn.disabled = false;
+    btn.classList.remove('ff-rec');
+    btn.textContent = '开 始 录 音';
+    progBox.classList.remove('ff-on');
+    prog.style.width = '0%';
+    waveBox.classList.remove('ff-hide');
+    drawStatic();
+  }
+
+  /* =========================================================
+     保险一：右下角连点 3 下 → 直达第四幕
+     ========================================================= */
+  var taps = [];
+  document.getElementById('ff-hot').addEventListener('click', function(e){
+    e.stopPropagation();
+    var now = Date.now();
+    taps.push(now);
+    taps = taps.filter(function(t){ return now - t < 900; });
+    if(taps.length >= 3){
+      taps = [];
+      emergency();
+    }
+  });
+  function emergency(){
+    if(state === 'err') return;
+    clearInterval(tickTimer); clearTimeout(endTimer);
+    stopMic(); stopDraw();
+    waveBox.classList.add('ff-hide');
+    loader.classList.add('ff-on');
+    loader.classList.remove('ff-broken');
+    setState('proc');
+    hint.textContent = '正在匹配语言模型…';
+    btn.disabled = true;
+    btn.textContent = '识 别 中…';
+    progBox.classList.remove('ff-on');
+    buzz(18);                               // 只有老师能察觉的极短确认震
+    setTimeout(function(){ showError(); }, 420);
+  }
+
+  /* =========================================================
+     事件绑定
+     ========================================================= */
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(state === 'idle') startRec();
+    else if(state === 'rec') finishRec(false);
+    else if(state === 'err') toIdle();
+  });
+  mic.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(state === 'idle') startRec();
+  });
+  app.addEventListener('click', function(e){
+    if(state === 'idle' && e.target.closest('.hot') === null) startRec();
+  });
+  document.getElementById('ff-btnRetry').addEventListener('click', function(){ toIdle(); });
+  mask.addEventListener('click', function(e){ if(e.target === mask) toIdle(); });
+
+  // 桌面调试快捷键：空格 = 开始/结束，Esc = 直达报错
+  document.addEventListener('keydown', function(e){
+    if(window.__scene !== 'A') return;
+    if(e.code === 'Space'){ e.preventDefault(); if(state==='idle') startRec(); else if(state==='rec') finishRec(false); }
+    if(e.code === 'Escape'){ emergency(); }
+  });
+
+  // 启动即进入待机：波形静止，等老师点击「开始录音」才动
+  window.addEventListener('load', function(){ drawStatic(); });
+  setTimeout(function(){ drawStatic(); }, 300);
+
+  /* 合并页对外接口 */
+  window.__ffStop  = function(){ clearInterval(tickTimer); clearTimeout(endTimer); stopMic(); stopDraw(); };
+  window.__ffReset = toIdle;
+  var _gb = document.getElementById('ffGotoB');
+  if(_gb) _gb.addEventListener('click', function(){ if(window.__gotoB) window.__gotoB(); });
+})();
+
+</script>
+<script>
+
+(function () {
+  'use strict';
+
+  /* ================= 一、音频：Web Audio 全合成 ================= */
+
+  var AC = null, master = null;
+
+  function audio() {
+    if (!AC) {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      try { AC = new C(); } catch (e) { return null; }
+      master = AC.createGain();
+      master.gain.value = 0.55;
+      master.connect(AC.destination);
+    }
+    if (AC.state === 'suspended' && AC.resume) { try { AC.resume(); } catch (e) {} }
+    return AC;
+  }
+
+  function noiseBuf(ctx, dur) {
+    var n = Math.max(1, Math.floor(ctx.sampleRate * dur));
+    var b = ctx.createBuffer(1, n, ctx.sampleRate);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    return b;
+  }
+  function env(g, t, peak, atk, dec) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(peak, t + atk);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + atk + dec);
+  }
+
+  /* 古琴滑音：Karplus–Strong 拨弦 + playbackRate 缓升模拟"走手音" */
+  function ksBuf(ctx, freq, dur, damp) {
+    var sr = ctx.sampleRate;
+    var N = Math.max(2, Math.round(sr / freq));
+    var L = Math.ceil(sr * dur);
+    var b = ctx.createBuffer(1, L, sr);
+    var o = b.getChannelData(0);
+    var line = new Float32Array(N), p = 0;
+    for (var i = 0; i < N; i++) { p = p * 0.42 + (Math.random() * 2 - 1) * 0.58; line[i] = p; }
+    var idx = 0;
+    for (var j = 0; j < L; j++) {
+      var cur = line[idx], nxt = line[(idx + 1) % N];
+      o[j] = cur;
+      line[idx] = (cur + nxt) * 0.5 * damp;
+      idx = (idx + 1) % N;
+    }
+    var fade = Math.floor(L * 0.18);
+    for (var k = 0; k < fade; k++) o[L - fade + k] *= (1 - k / fade);
+    return b;
+  }
+
+  /* 古琴"清音"：高把位拨弦（G4）+ 泛音叮点 + 指甲触弦，整体明亮、短促
+     注：当前版本不再启用（课堂上第一关只要逐字落字的清脆轻点），保留备用 */
+  function sfxGuqin(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+
+    // ① 拨弦本体：提高基频到 G4，衰减更快，低通开到 7k 让泛音透出来
+    var src = ctx.createBufferSource();
+    src.buffer = ksBuf(ctx, 392.00, 1.5, 0.9942);      // G4
+    src.playbackRate.setValueAtTime(0.985, t);
+    src.playbackRate.linearRampToValueAtTime(1.075, t + 0.5);   // 轻走手滑音
+    src.playbackRate.linearRampToValueAtTime(1.0, t + 0.85);
+    var hp = ctx.createBiquadFilter(); hp.type = 'highpass';
+    hp.frequency.value = 190; hp.Q.value = 0.5;                 // 抬掉低频浑浊
+    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(5400, t);
+    lp.frequency.linearRampToValueAtTime(7200, t + 0.45);
+    lp.Q.value = 0.6;
+    var g = ctx.createGain(); g.gain.value = 0.46;
+    src.connect(hp); hp.connect(lp); lp.connect(g); g.connect(master);
+    src.start(t); src.stop(t + 1.6);
+
+    // ② 泛音叮点：八度 / 十二度 / 双八度，极短衰减 → 清脆
+    [[784, 0.15, 0.85], [1174.66, 0.085, 0.55], [1568, 0.045, 0.38]].forEach(function (p) {
+      var o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(p[0], t);
+      var gg = ctx.createGain(); env(gg, t, p[1], 0.003, p[2]);
+      o.connect(gg); gg.connect(master);
+      o.start(t); o.stop(t + p[2] + 0.08);
+    });
+
+    // ③ 指甲触弦的一点高频"啪"，强化起音的清脆感
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx, 0.035);
+    var bhp = ctx.createBiquadFilter(); bhp.type = 'highpass'; bhp.frequency.value = 3200;
+    var g2 = ctx.createGain(); env(g2, t, 0.075, 0.001, 0.03);
+    s.connect(bhp); bhp.connect(g2); g2.connect(master);
+    s.start(t); s.stop(t + 0.06);
+  }
+
+
+  /* 音节逐字浮现时的一记轻"点"（音量极低，只做颗粒感，不抢戏） */
+  function sfxTick(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+    var o = ctx.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(1620, t);
+    o.frequency.exponentialRampToValueAtTime(1180, t + 0.05);
+    var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 950;
+    var g = ctx.createGain(); env(g, t, 0.05, 0.002, 0.05);
+    o.connect(hp); hp.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.09);
+  }
+
+  /* 木鱼：所有木牌按钮的点击反馈（短促、木质、不拖尾） */
+  function sfxMuyu(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+    [[820, 1.0, 0.17], [1245, 0.52, 0.11], [1870, 0.26, 0.07]].forEach(function (p) {
+      var o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(p[0], t);
+      o.frequency.exponentialRampToValueAtTime(p[0] * 0.86, t + 0.09);
+      var g = ctx.createGain(); env(g, t, 0.15 * p[1], 0.002, p[2]);
+      o.connect(g); g.connect(master);
+      o.start(t); o.stop(t + p[2] + 0.06);
+    });
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx, 0.05);
+    var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 1.2;
+    var g2 = ctx.createGain(); env(g2, t, 0.085, 0.001, 0.045);
+    s.connect(bp); bp.connect(g2); g2.connect(master);
+    s.start(t); s.stop(t + 0.07);
+  }
+
+  /* 琵琶：原「拦截」分支的反馈音。该分支已移除，此处保留备用 */
+  function sfxPipa(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var base = ctx.currentTime + (delay || 0);
+    [[329.63, 0.00], [293.66, 0.13], [246.94, 0.26]].forEach(function (n) {
+      var s = ctx.createBufferSource();
+      s.buffer = ksBuf(ctx, n[0], 1.3, 0.9955);
+      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3800;
+      var g = ctx.createGain(); g.gain.value = 0.44;
+      s.connect(lp); lp.connect(g); g.connect(master);
+      s.start(base + n[1]); s.stop(base + n[1] + 1.4);
+    });
+  }
+
+  function sfxChime(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0), f0 = 784;
+    [[1, 1.0, 2.8], [2.03, 0.40, 2.0], [2.76, 0.26, 1.4], [5.38, 0.13, 0.85], [8.92, 0.06, 0.55]]
+      .forEach(function (p) {
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(f0 * p[0], t);
+        var g = ctx.createGain(); env(g, t, 0.2 * p[1], 0.005, p[2]);
+        o.connect(g); g.connect(master);
+        o.start(t); o.stop(t + p[2] + 0.1);
+      });
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx, 0.04);
+    var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 2600;
+    var g2 = ctx.createGain(); env(g2, t, 0.09, 0.002, 0.035);
+    s.connect(hp); hp.connect(g2); g2.connect(master);
+    s.start(t); s.stop(t + 0.08);
+  }
+
+  function drumHit(ctx, t, peak) {
+    var o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(168, t);
+    o.frequency.exponentialRampToValueAtTime(46, t + 0.30);
+    var g = ctx.createGain(); env(g, t, peak, 0.006, 0.55);
+    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 215;
+    o.connect(g); g.connect(lp); lp.connect(master);
+    o.start(t); o.stop(t + 0.75);
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx, 0.1);
+    var lp2 = ctx.createBiquadFilter(); lp2.type = 'lowpass'; lp2.frequency.value = 360;
+    var g2 = ctx.createGain(); env(g2, t, peak * 0.32, 0.003, 0.09);
+    s.connect(lp2); lp2.connect(g2); g2.connect(master);
+    s.start(t); s.stop(t + 0.16);
+  }
+  function sfxDrum(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+    drumHit(ctx, t, 0.62); drumHit(ctx, t + 0.30, 0.42); drumHit(ctx, t + 0.56, 0.26);
+  }
+
+  /* 铜锣：非谐分音簇 + 带通噪声 + 缓慢起振与长余韵 */
+  function sfxGong(delay) {
+    var ctx = audio(); if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+    var base = 172;
+    [1, 1.42, 1.87, 2.36, 3.11, 3.94, 5.12, 6.38].forEach(function (r, i) {
+      var o = ctx.createOscillator(); o.type = 'sine';
+      var f = base * r * (1 + (Math.random() - 0.5) * 0.012);
+      o.frequency.setValueAtTime(f * 0.985, t);
+      o.frequency.linearRampToValueAtTime(f, t + 0.5);
+      var peak = 0.17 / (1 + i * 0.55);
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(peak, t + 0.06 + i * 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 2.6 - i * 0.18);
+      o.connect(g); g.connect(master);
+      o.start(t); o.stop(t + 2.8);
+    });
+    // 锣面沙沙
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx, 1.8);
+    var bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 0.8;
+    var g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.0001, t);
+    g2.gain.linearRampToValueAtTime(0.10, t + 0.08);
+    g2.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+    s.connect(bp); bp.connect(g2); g2.connect(master);
+    s.start(t); s.stop(t + 1.9);
+  }
+
+  /* ================= 二、TTS ================= */
+
+  var voices = [];
+  function loadVoices() {
+    if (!window.speechSynthesis) return;
+    try { voices = window.speechSynthesis.getVoices() || []; } catch (e) { voices = []; }
+  }
+  loadVoices();
+  if (window.speechSynthesis && typeof speechSynthesis.onvoiceschanged !== 'undefined') {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  /* 多音字纠音表：中文 TTS 常把「重背」读成 zhòng bèi，
+     「重新」是高频双音节词，分词稳定，必读 chóng xīn。
+     凡以后再写「重背」，都会先在这里被纠正。 */
+  var POLYPHONE = [
+    [/亡赖/g, '无赖'],          // 古汉语通假，读音同「无赖」wú lài
+    [/重背/g, '重新背'],
+    [/重背一遍/g, '重新背一遍'],
+    [/重读一遍/g, '重新读一遍']
+  ];
+  function fixPolyphone(text) {
+    var s = String(text);
+    for (var i = 0; i < POLYPHONE.length; i++) s = s.replace(POLYPHONE[i][0], POLYPHONE[i][1]);
+    return s;
+  }
+
+  var ttsToken = 0;
+  function speak(rawText, rate, pitch, done) {
+    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
+      if (done) setTimeout(done, 500);
+      return;
+    }
+    var my = ++ttsToken;
+    var text = fixPolyphone(rawText);
+    try {
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-CN'; u.rate = rate || 0.8; u.pitch = pitch || 1; u.volume = 1;
+      var v = null;
+      for (var i = 0; i < voices.length; i++) {
+        var vv = voices[i];
+        if (/^zh(-|_)?(CN|Hans)?/i.test(vv.lang) || /Chinese|中文|普通话/i.test(vv.name)) { v = vv; break; }
+      }
+      if (v) u.voice = v;
+      var finished = false;
+      var safety = setTimeout(finish, Math.max(3000, text.length * 600));
+      function finish() {
+        if (finished || my !== ttsToken) return;
+        finished = true; clearTimeout(safety);
+        if (done) done();
+      }
+      u.onend = finish; u.onerror = finish;
+      speechSynthesis.speak(u);
+    } catch (e) { if (done) setTimeout(done, 400); }
+  }
+
+  /* 分段朗读：逐句设定语速/音调，用于播报的戏剧化处理 */
+  function pickVoice() {
+    for (var i = 0; i < voices.length; i++) {
+      var vv = voices[i];
+      if (/^zh(-|_)?(CN|Hans)?/i.test(vv.lang) || /Chinese|中文|普通话/i.test(vv.name)) return vv;
+    }
+    return null;
+  }
+  function speakSeq(parts, done) {
+    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
+      if (done) setTimeout(done, 1200);
+      return;
+    }
+    var my = ++ttsToken, i = 0, v = pickVoice();
+    try { speechSynthesis.cancel(); } catch (e) {}
+    function next() {
+      if (my !== ttsToken) return;
+      if (i >= parts.length) { if (done) done(); return; }
+      var p = parts[i++];
+      var u = new SpeechSynthesisUtterance(fixPolyphone(p.t));
+      u.lang = 'zh-CN'; u.rate = p.r || 0.8; u.pitch = p.p || 1; u.volume = 1;
+      if (v) u.voice = v;
+      var fin = false;
+      var safety = setTimeout(goOn, Math.max(2500, p.t.length * 700));
+      function goOn() {
+        if (fin || my !== ttsToken) return;
+        fin = true; clearTimeout(safety);
+        setTimeout(next, p.gap || 150);
+      }
+      u.onend = goOn; u.onerror = goOn;
+      try { speechSynthesis.speak(u); } catch (e) { goOn(); }
+    }
+    setTimeout(next, 60);
+  }
+
+  /* 终局播报台词：与屏幕播报框逐字一致（"你背成了「最喜小儿无赖」，请重新背一遍！"），
+     只是去掉了方括号语气符与感叹号，避免 TTS 念出标点。
+     分三段朗读，"最喜小儿无赖"整段放慢、压低音调，制造一本正经的荒诞感。 */
+  var BCAST = [
+    { t: '你背成了，',        r: 0.85, p: 1.00, gap: 200 },
+    { t: '最喜小儿无赖，',    r: 0.55, p: 0.84, gap: 320 },   // 加重、拖长
+    { t: '请重新背一遍。',    r: 0.80, p: 0.95, gap: 200 }
+  ];
+  var BCAST_FLAT = '你背成了，最喜小儿无赖，请重新背一遍。';
+
+  /* ================= 三、触觉（可选） ================= */
+  function buzz(pattern) {
+    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+  }
+
+  /* ================= 四、左侧系统经脉图 ================= */
+  /* 严格对照教材 P2 图 2-32「语音交互系统」：
+     自下而上＝输入层（内含 P5 的语音识别 ASR 子结构）→ 决策层 → 输出层。 */
+
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var NW = 150, NH = 56;
+  var mapSvg = document.getElementById('mapSvg');
+  var nodeEls = {}, flowEls = {}, waveEls = [];
+
+  /* 三层外框（大组） */
+  var FRAMES = [
+    { name: '输出层', x: 14, y: 14,  w: 592, h: 180, tx: 32, ty: 42 },
+    { name: '决策层', x: 14, y: 234, w: 592, h: 164, tx: 32, ty: 262 },
+    { name: '输入层', x: 14, y: 438, w: 592, h: 292, tx: 32, ty: 466 }
+  ];
+  /* 输入层内的 ASR 子面板（小组） */
+  var ASRP = { x: 42, y: 494, w: 278, h: 196, ty: 486, label: '语音识别 (ASR)' };
+
+  /* 节点：x/y 为中心点；layer 用于左侧「当前环节」指示；root 表示该节点是全案唯一的出错根因 */
+  var NODES = [
+    { id: 'AM',   label: '声学模型',     code: '耳',   x: 181, y: 552, w: NW, h: NH, layer: '输入层 · 语音识别(ASR)' },
+    { id: 'LM',   label: '语言模型',     code: '脑',   x: 181, y: 648, w: NW, h: NH, layer: '输入层 · 语音识别(ASR)', root: 1 },
+    { id: 'NLU',  label: '自然语言理解', code: 'NLU',  x: 455, y: 648, w: NW, h: NH, layer: '输入层' },
+    { id: 'DM',   label: '对话决策',     code: 'DM',   x: 310, y: 330, w: NW, h: NH, layer: '决策层' },
+    { id: 'HIST', label: '历史输入',     code: '语境', x: 140, y: 350, w: 104, h: 44, sm: 1, layer: '决策层' },
+    { id: 'NLG',  label: '自然语言生成', code: 'NLG',  x: 190, y: 132, w: NW, h: NH, layer: '输出层' },
+    { id: 'SST',  label: '语音合成',     code: 'SST',  x: 450, y: 132, w: NW, h: NH, layer: '输出层' }
+  ];
+
+  /* 数据流：一律按「源 → 目的」绘制，光流动画沿此方向推进 */
+  var FLOWS = [
+    { id: 'am2lm',   d: 'M256,552 H272 Q284,552 284,564 V636 Q284,648 272,648 H258',
+      ah: 'M266,642 L256,648 L266,654' },
+    { id: 'lm2nlu',  d: 'M258,648 L374,648',       ah: 'M366,642 L376,648 L366,654' },
+    { id: 'nlu2dm',  d: 'M455,620 C455,505 310,468 310,356', ah: 'M303,365 L310,355 L317,365' },
+    { id: 'hist2dm', d: 'M192,342 C210,342 224,338 234,331', ah: 'M226,326 L236,331 L226,336' },
+    { id: 'dm2nlg',  d: 'M310,302 C310,240 190,246 190,162', ah: 'M183,171 L190,161 L197,171' },
+    { id: 'nlg2sst', d: 'M265,132 L369,132',       ah: 'M361,127 L371,132 L361,137' }
+  ];
+
+  function el(tag, attrs) {
+    var e = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function buildMap() {
+    /* ① 三层虚线外框 + 层名（层名加底衬，避免被框线穿过） */
+    FRAMES.forEach(function (F) {
+      mapSvg.appendChild(el('rect', { class: 'frame', x: F.x, y: F.y, width: F.w, height: F.h, rx: 18 }));
+      mapSvg.appendChild(el('rect', { class: 'frame-tag', x: F.tx - 10, y: F.ty - 20, width: 94, height: 27, rx: 5 }));
+      var t = el('text', { class: 'frame-t', x: F.tx, y: F.ty });
+      t.textContent = F.name;
+      mapSvg.appendChild(t);
+    });
+    /* ② ASR 子面板 */
+    mapSvg.appendChild(el('rect', { class: 'sub-panel', x: ASRP.x, y: ASRP.y, width: ASRP.w, height: ASRP.h, rx: 12 }));
+    var st = el('text', { class: 'sub-t', x: ASRP.x + ASRP.w / 2, y: ASRP.ty });
+    st.textContent = ASRP.label;
+    mapSvg.appendChild(st);
+
+    /* ③ 数据流（画在节点下层） */
+    FLOWS.forEach(function (f) {
+      var g = el('g', { class: 'corridor', 'data-id': f.id });
+      g.appendChild(el('path', { class: 'cbg', d: f.d }));
+      var p1 = el('path', { class: 'cf', d: f.d, pathLength: 100 });
+      var p2 = el('path', { class: 'cf', d: f.d, pathLength: 100 });
+      p2.style.animationDelay = '.5s';
+      g.appendChild(p1); g.appendChild(p2);
+      g.appendChild(el('path', { class: 'arrow', d: f.ah }));
+      mapSvg.appendChild(g);
+      flowEls[f.id] = g;
+    });
+
+    /* ④ 外界语音输入提示（静态） */
+    var hint = el('g', {});
+    ['M60,543 V561', 'M68,537 V567', 'M76,545 V559', 'M86,552 L96,552'].forEach(function (d) {
+      hint.appendChild(el('path', { class: 'in-hint', d: d }));
+    });
+    hint.appendChild(el('path', { class: 'arrow', d: 'M90,547 L99,552 L90,557' }));
+    mapSvg.appendChild(hint);
+
+    /* ⑤ 节点 */
+    NODES.forEach(function (n) {
+      var g = el('g', { class: 'node' + (n.sm ? ' sm' : ''), 'data-id': n.id });
+      var x = n.x - n.w / 2, y = n.y - n.h / 2;
+      g.appendChild(el('rect', { class: 'halo', x: x, y: y, width: n.w, height: n.h, rx: 14 }));
+      g.appendChild(el('rect', { class: 'body', x: x, y: y, width: n.w, height: n.h, rx: 14 }));
+      g.appendChild(el('rect', { class: 'ring', x: x + 5, y: y + 5, width: n.w - 10, height: n.h - 10, rx: 10 }));
+      var t1 = el('text', { class: 'nl', x: n.x, y: n.y - 1 }); t1.textContent = n.label;
+      var t2 = el('text', { class: 'nc', x: n.x, y: n.y + 17 }); t2.textContent = n.code;
+      g.appendChild(t1); g.appendChild(t2);
+      /* 出错根因徽记：只在 root 节点上挂，全案只有一个红点可归因 */
+      if (n.root) {
+        var bg = el('g', { class: 'badge' });
+        var bx = n.x + n.w / 2 - 8, by = n.y - n.h / 2 + 2;
+        bg.appendChild(el('circle', { cx: bx, cy: by, r: 14 }));
+        var bt = el('text', { x: bx, y: by + 5 }); bt.textContent = '错';
+        bg.appendChild(bt);
+        g.appendChild(bg);
+      }
+      mapSvg.appendChild(g);
+      nodeEls[n.id] = g;
+    });
+
+    /* ⑥ SST 上方的输出声波 */
+    var wg = el('g', {});
+    [[14, 'M436,98.4 Q450,81.6 464,98.4'],
+     [26, 'M424,93.6 Q450,62.4 476,93.6'],
+     [38, 'M412,88.8 Q450,43.2 488,88.8']].forEach(function (w, i) {
+      var p = el('path', { class: 'wave', d: w[1] });
+      p.style.animationDelay = (i * 0.18).toFixed(2) + 's';
+      wg.appendChild(p);
+      waveEls.push(p);
+    });
+    mapSvg.appendChild(wg);
+  }
+  buildMap();
+
+  function nodeState(id, st) {           // st: '' | 'breath' | 'ok' | 'err' | 'ctx'
+    var g = nodeEls[id]; if (!g) return;
+    g.classList.remove('breath', 'ok', 'err', 'ctx');
+    if (st) g.classList.add(st);
+  }
+
+  /* 左侧「当前环节」指示条：随流程推进，告诉学生现在看哪一块 */
+  var NODE_MAP = {};
+  NODES.forEach(function (n) { NODE_MAP[n.id] = n; });
+  var msNode = document.getElementById('msNode');
+  var msLayer = document.getElementById('msLayer');
+  function focusNode(id) {
+    var n = NODE_MAP[id]; if (!n) return;
+    msNode.textContent = n.label + '　' + n.code;
+    msLayer.textContent = n.layer;
+  }
+  function focusIdle(text) {
+    msNode.textContent = text || '—';
+    msLayer.textContent = '待启动';
+  }
+  function flowOn(key, kind) {           // key: am2lm / lm2nlu / nlu2dm / hist2dm / dm2nlg / nlg2sst
+    var g = flowEls[key]; if (!g) return;
+    g.classList.remove('ok', 'err');
+    g.classList.add('on');
+    if (kind) g.classList.add(kind);
+  }
+  function flowOff(key) {
+    var g = flowEls[key]; if (!g) return;
+    g.classList.remove('on', 'ok', 'err');
+  }
+  function waveOn(kind) {
+    waveEls.forEach(function (p) {
+      p.classList.toggle('red', kind === 'err');
+      p.classList.add('go');
+    });
+  }
+  function waveOff() {
+    waveEls.forEach(function (p) { p.classList.remove('go', 'red'); });
+  }
+
+  /* ================= 五、毛笔笔触 ================= */
+
+  function brushSeg(x0, x1, thick) {
+    var len = x1 - x0, h = thick / 2, y = 0;
+    return 'M ' + x0 + ' ' + y +
+      ' C ' + (x0 + len * 0.28) + ' ' + (y - h * 0.95) +
+      ', ' + (x1 - len * 0.26) + ' ' + (y - h * 1.02) +
+      ', ' + x1 + ' ' + (y - h * 0.10) +
+      ' C ' + x1 + ' ' + (y + h * 0.08) +
+      ', ' + (x1 - len * 0.20) + ' ' + (y + h * 0.92) +
+      ', ' + (x0 + len * 0.32) + ' ' + (y + h * 0.86) +
+      ' C ' + (x0 + len * 0.13) + ' ' + (y + h * 0.74) +
+      ', ' + x0 + ' ' + (y + h * 0.28) +
+      ', ' + x0 + ' ' + y + ' Z';
+  }
+  function fullStroke(len, thick) { return brushSeg(0, len, thick); }
+  // 断笔：用一串小碎段，既"极细近乎断裂"，又便于做碎裂粒子
+  function segStroke(len, thick, count) {
+    var out = [], n = count || 15, unit = len / n;
+    for (var i = 0; i < n; i++) {
+      var a = i * unit, b = a + unit * 0.62;
+      out.push(brushSeg(a, b, thick));
+    }
+    return out;
+  }
+
+  var VB_W = 420, VB_H = 68;
+  var CANDS = [
+    { text: '无赖', thick: 30, cls: 'pick', an: '现代高频贬义词，系统最眼熟', fill: '#B03A2E', op: 0.88 },
+    { text: '无睐', thick: 12, cls: '',     an: '同音字干扰',         fill: '#2E2B26', op: 0.62 },
+    { text: '亡赖', thick: 4,  cls: 'rare', an: '古汉语通假字，现代语料极罕见',             fill: '#C08A1E', op: 0.85 }
+  ];
+
+  function makeStroke(c, segs) {
+    var svg = el('svg', { class: 'stroke', viewBox: '0 ' + (-VB_H / 2) + ' ' + VB_W + ' ' + VB_H, preserveAspectRatio: 'none' });
+    if (segs) {
+      segs.forEach(function (d) {
+        var p = el('path', { d: d, fill: c.fill, opacity: c.op, filter: 'url(#inkRough2)' });
+        p.setAttribute('class', 'seg');
+        p.style.setProperty('--dx', (Math.random() * 90 - 45).toFixed(1) + 'px');
+        p.style.setProperty('--dy', (Math.random() * 70 - 35).toFixed(1) + 'px');
+        p.style.setProperty('--rot', (Math.random() * 120 - 60).toFixed(1) + 'deg');
+        svg.appendChild(p);
+      });
+    } else {
+      var p2 = el('path', { d: fullStroke(VB_W * 0.97, c.thick), fill: c.fill, opacity: c.op, filter: 'url(#inkRough)' });
+      svg.appendChild(p2);
+    }
+    return svg;
+  }
+
+  function buildCandidates() {
+    var wrap = document.createElement('div');
+    wrap.className = 'cands inkin';
+    wrap.id = 'candWrap';
+    CANDS.forEach(function (c) {
+      var row = document.createElement('div');
+      row.className = 'cand ' + c.cls;
+      if (c.cls === 'rare') row.id = 'rowWang';
+      row.appendChild(makeStroke(c, c.cls === 'rare' ? segStroke(VB_W * 0.97, c.thick, 16) : null));
+      var w = document.createElement('div'); w.className = 'cw'; w.textContent = c.text;
+      var a = document.createElement('div'); a.className = 'an'; a.textContent = c.an;
+      row.appendChild(w); row.appendChild(a);
+      wrap.appendChild(row);
+    });
+    return wrap;
+  }
+
+  /* ================= 六、控制台流程 ================= */
+
+  var stage = document.getElementById('stage');
+  var actions = document.getElementById('actions');
+  var ripple = document.getElementById('ripple');
+  var redwash = document.getElementById('redwash');
+  var gno = document.getElementById('gno');
+  var gname = document.getElementById('gname');
+  var stepEls = document.querySelectorAll('.step');
+
+  var timers = [];
+  var locked = false;
+  var phase = 0;
+
+  function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function setGate(n, name) {
+    gno.textContent = ['', '第一关', '第二关', '第三关'][n] || '';
+    gname.textContent = name || '';
+    stepEls.forEach(function (s) {
+      var k = +s.dataset.s;
+      s.classList.remove('now', 'done', 'bad');
+      if (k === 2 && n === 3) s.classList.add('bad');       // 第二关是出错的那一关
+      else if (k < n) s.classList.add('done');
+      if (k === n) s.classList.add('now');
+    });
+  }
+
+  function btn(label, cls, fn) {
+    var b = document.createElement('button');
+    b.className = 'wood ' + (cls || '');
+    b.type = 'button';
+    b.textContent = label;
+    b.addEventListener('click', function () { audio(); sfxMuyu(0); fn(); });
+    return b;
+  }
+  function setActions(list) {
+    actions.innerHTML = '';
+    list.forEach(function (a) { actions.appendChild(btn(a[0], a[1], a[2])); });
+  }
+  function clearStage(keepRipple) {
+    stage.innerHTML = '';
+    if (!keepRipple) ripple.classList.remove('go');
+    stage.appendChild(ripple);
+  }
+  function addLine(html, cls) {
+    var d = document.createElement('div');
+    d.className = 'line fade' + (cls ? ' ' + cls : '');
+    d.innerHTML = html;
+    stage.appendChild(d);
+    requestAnimationFrame(function () { d.classList.add('show'); });
+    return d;
+  }
+
+  function resetAll() {
+    clearTimers();
+    ttsToken++;
+    if (window.speechSynthesis) { try { speechSynthesis.cancel(); } catch (e) {} }
+    locked = false;
+    redwash.classList.remove('go');
+    ['AM', 'LM', 'NLU', 'DM', 'HIST', 'NLG', 'SST'].forEach(function (k) { nodeState(k, ''); });
+    ['am2lm', 'lm2nlu', 'nlu2dm', 'hist2dm', 'dm2nlg', 'nlg2sst'].forEach(flowOff);
+    waveOff();
+    clearStage();
+    setGate(1, '听音辨字');
+    phase = 0;
+    focusIdle('—');
+    gate0();
+  }
+
+  /* --- 第 0 步：开场 --- */
+  function gate0() {
+    addLine('一句诗进入语音识别系统，自下而上流经三层流水线。', 'dim');
+    addLine('目标句：<b>最喜小儿亡赖</b>　—— 每一环都会留下自己的处理结果，据此可定位<span class="hl">出错的环节</span>。', 'dim');
+    setActions([['起卷 · 第一关', '', gate1a]]);
+  }
+
+  /* --- 第一关 ① 接收 --- */
+  function gate1a() {
+    if (locked) return;
+    clearStage();
+    nodeState('AM', 'breath');
+    focusNode('AM');
+    ripple.classList.add('go');           // 接收阶段只走水墨波纹，不出声
+    addLine('正在接收语音……', 'dim');
+    at(1500, gate1b);
+  }
+
+  /* --- 第一关 ② 音节浮现（打字机） --- */
+  function gate1b() {
+    ripple.classList.remove('go');
+    clearStage(true);
+    var box = document.createElement('div');
+    box.className = 'py-big';
+    stage.appendChild(box);
+    var chars = [
+      { c: 'w', t: 0 }, { c: 'ú', t: 1 }, { c: ' ', t: 0 },
+      { c: 'l', t: 0 }, { c: 'à', t: 1 }, { c: 'i', t: 0 }
+    ];
+    var cur = document.createElement('span');
+    cur.className = 'cur'; cur.textContent = '▍';
+    var i = 0;
+    function step() {
+      if (i >= chars.length) {
+        cur.remove();
+        /* 读音标出后，紧接着把「耳朵没坏」的三条结论一次性摊开，由老师当场讲透；
+           再交到语言模型手上。 */
+        addLine('声学模型提取音节：<span class="ok">wú lài</span>（声调已标出）。', 'dim');
+        addLine('耳朵听清了，<span class="ok">声学层无误</span>。', '');
+        addLine('声调都已标出——这是「耳朵没坏」的铁证。问题不在耳，在脑。', 'dim');
+        addLine('（确认无误后，交到语言模型手上）', 'dim');
+        setActions([['确认无误 · 交到语言模型', '', gate1c]]);
+        return;
+      }
+      var ch = chars[i];
+      var s = document.createElement('span');
+      if (ch.t) s.className = 'tone';
+      s.textContent = ch.c;
+      box.insertBefore(s, cur);
+      if (ch.c !== ' ') sfxTick(0);          // 落字时一记清脆轻点（空格不发声）
+      i++;
+      at(170, step);
+    }
+    box.appendChild(cur);
+    at(320, step);
+  }
+
+  /* --- 第一关 ③ 确认无误 → 交给语言模型 --- */
+  function gate1c() {
+    if (locked) return;
+    locked = true;
+    setActions([]);
+    nodeState('AM', 'ok');
+    flowOn('am2lm', 'ok');
+    sfxChime(0);
+    /* 画面停在原处：让绿线把音节送到语言模型，学生看清「耳朵这一段是干净的」 */
+    at(900, gate2a);
+  }
+
+  /* --- 第二关 ① 候选 --- */
+  function gate2a() {
+    locked = false;
+    setGate(2, '选字定夺');
+    clearStage(true);
+    nodeState('LM', 'breath');
+    focusNode('LM');
+    var wrap = buildCandidates();
+    stage.appendChild(wrap);
+    requestAnimationFrame(function () { wrap.classList.add('show'); });
+    var note = document.createElement('div');
+    note.className = 'foot-note fade';
+    note.innerHTML = '系统不是在理解诗意，只是在<b>逐字算概率</b>：「无赖」是它最眼熟的现代词，「亡赖」它几乎没见过。';
+    stage.appendChild(note);
+    requestAnimationFrame(function () { note.classList.add('show'); });
+    at(300, function () {
+      var wb = document.createElement('div');
+      wb.className = 'warn-box'; wb.id = 'warnBox';
+      wb.innerHTML = '<div class="wt">⚠ 系统提示：</div>'
+        + '系统判定「无赖」在现代语料中出现频率<b>压倒性领先</b>，正准备强制替换。<br>'
+        + '流程继续：语言模型将按<b>概率最高项</b>定字。';
+      stage.appendChild(wb);
+      addLine('系统倾向选择：<span class="hl">无赖</span>。', '');
+      setActions([['继续 · 由系统定字', '', gate2c]]);
+    });
+  }
+
+  /* --- 第二关 ② 系统自己拍板 --- */
+  function gate2c() {
+    if (locked) return;
+    locked = true;
+    setActions([]);
+    var wb = document.getElementById('warnBox'); if (wb) wb.remove();
+    var wang = document.getElementById('rowWang');
+    if (wang) wang.classList.add('shatter');
+    addLine('系统拍板：<span class="hl">无赖</span>。', '');
+    addLine('「亡赖」这一笔太细，被概率直接判掉了——错误就在此刻生成。', 'dim');
+    buzz(150);
+    sfxDrum(120);
+    at(420, function () {
+      var ding = document.createElement('div');
+      ding.className = 'ding';
+      ding.id = 'dingSeal';
+      ding.textContent = '定';
+      var pickRow = document.querySelector('.cand.pick');
+      (pickRow || stage).appendChild(ding);
+      requestAnimationFrame(function () { ding.classList.add('stamp'); });
+    });
+    at(520, function () {
+      nodeState('LM', 'err');
+      flowOn('lm2nlu', 'err');
+    });
+    at(2400, gate3a);
+  }
+
+  /* --- 第三关 ① 决策层 --- */
+  function gate3a() {
+    locked = false;
+    setGate(3, '断案定责');
+    clearStage(true);
+    nodeState('NLU', 'breath');
+    focusNode('NLU');
+    addLine('NLU 提取意图：小儿 + <span class="hl">无赖</span>', 'dim');
+    at(900, function () {
+      nodeState('NLU', 'ok');            // 意图提取本身是成功的 —— 它提取的是错误的结果
+      flowOn('nlu2dm', 'err');
+      nodeState('DM', 'breath');
+      focusNode('DM');
+      at(500, function () {
+        nodeState('HIST', 'ctx');        // 调用「历史输入」：这是背诵场景
+        flowOn('hist2dm', 'ok');
+      });
+      addLine('DM 比对：标准答案【<b>亡赖</b>】与识别结果【<span class="hl">无赖</span>】<span class="hl">不匹配！</span>', '');
+      sfxGong(120);
+      at(700, function () {
+        nodeState('DM', 'err');
+        flowOn('dm2nlg', 'err');
+      });
+      at(1500, function () {
+        setActions([['执行纠错播报', 'warn', gate3b]]);
+      });
+    });
+  }
+
+  /* --- 第三关 ③ 播报 --- */
+  function gate3b() {
+    if (locked) return;
+    locked = true;
+    setActions([]);
+    nodeState('NLG', 'breath');
+    focusNode('NLG');
+    addLine('NLG 生成纠错话语……', 'dim');
+    at(800, function () {
+      nodeState('NLG', 'ok');
+      flowOn('nlg2sst', 'err');
+      nodeState('SST', 'breath');
+      focusNode('SST');
+      waveOn('err');
+      var b = document.createElement('div');
+      b.className = 'bcast fade';
+      b.innerHTML = '【系统播报】你背成了「<span class="hl">最喜小儿无赖</span>」，请重新背一遍！';
+      b.title = '点击可重听播报'; b.style.cursor = 'pointer';
+      b.addEventListener('click', function () { audio(); speakSeq(BCAST, null); });
+      stage.appendChild(b);
+      requestAnimationFrame(function () { b.classList.add('show'); });
+      redwash.classList.add('go');
+      buzz([60, 80, 60]);
+      speakSeq(BCAST, function () {
+        at(200, gate3c);
+      });
+    });
+  }
+
+  /* --- 第三关 ④ 终局 --- */
+  function gate3c() {
+    nodeState('SST', 'err');
+    at(500, function () { redwash.classList.remove('go'); });
+    var f = document.createElement('div');
+    f.className = 'final fade';
+    f.innerHTML = '系统觉得自己工作得极其完美。';
+    stage.appendChild(f);
+    requestAnimationFrame(function () { f.classList.add('show'); });
+    /* 断案：全案只有一个根因，红点只落在语言模型上 */
+    addLine('【断案】出错的只有一处——<span class="hl">输入层的语言模型</span>。'
+          + '后面每一环都只是在忠实地传递这个错误。', '');
+    at(700, function () {
+      setActions([['复始 · 重走三关', 'alt', resetAll]]);
+    });
+    locked = false;
+  }
+
+  document.getElementById('btnReset').addEventListener('click', function () { audio(); sfxMuyu(0); resetAll(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (window.__scene !== 'B') return;
+    if (e.key === 'r' || e.key === 'R') { resetAll(); return; }
+    if (e.key === ' ' || e.key === 'Enter') {
+      var b = actions.querySelector('button');
+      if (b) { e.preventDefault(); b.click(); }
+    }
+  });
+
+  resetAll();
+  window.__tpReset = resetAll;
+})();
+
+</script>
+<script>
+/* ============ 场景切换 ============ */
+(function(){
+  var A = document.getElementById('sceneA'), B = document.getElementById('sceneB');
+  var tabA = document.getElementById('tabA'), tabB = document.getElementById('tabB');
+  window.__scene = 'A';
+  function show(name){
+    if(window.__scene === name) return;
+    if(name !== 'A' && window.__ffStop) window.__ffStop();   // 离开翻车现场：关麦克风、停定时器
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    window.__scene = name;
+    A.hidden = (name !== 'A');
+    B.hidden = (name !== 'B');
+    tabA.classList.toggle('on', name === 'A');
+    tabB.classList.toggle('on', name === 'B');
+    if(name === 'A' && window.__ffReset) window.__ffReset();  // 回到翻车现场：复位到待机
+  }
+  tabA.addEventListener('click', function(){ show('A'); });
+  tabB.addEventListener('click', function(){ show('B'); });
+  window.__gotoB = show.bind(null, 'B');
+  document.addEventListener('keydown', function(e){
+    if(e.key === '1') show('A');
+    if(e.key === '2') show('B');
+  });
+})();
+</script>
+</body>
+</html>
